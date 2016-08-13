@@ -79,6 +79,6 @@ tapiola.map <- qmap(location = map.bounds, zoom = map.zoom, color = 'bw')
 
 map.to.print <- tapiola.map +
   geom_path(aes(x = longitude, y = latitude, group = factor(index)), 
-                colour="red", linetype = 1, size = 3, data = routes, alpha=0.3)
+                colour="red", linetype = 1, size = 2, data = routes, alpha=0.3)
 
 print(map.to.print)
