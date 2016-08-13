@@ -20,25 +20,25 @@ for (i in 1:length(files)) {
 routes <- data.frame(cbind(index, latitude, longitude))
 
 # function to return map location based on routes
-get_map_bounds <-function(routes){
-  max_lat <- max(routes[2])
-  min_lat <- min(routes[2])
-  max_lon <- max(routes[3])
-  min_lon <- min(routes[3])
+GetMapBounds <-function(routes){
+  max.lat <- max(routes[2])
+  min.lat <- min(routes[2])
+  max.lon <- max(routes[3])
+  min.lon <- min(routes[3])
 
-  mapBounds <- c(min_lon, min_lat, max_lon, max_lat)
-  return(mapBounds)
+  map.bounds <- c(min.lon, min.lat, max.lon, max.lat)
+  return(map.bounds)
 }
 
 
 # function to get right zoom level
-get_map_zoom <-function(mapBounds) {
+GetMapZoom <-function(map.bounds) {
 
-  width <- mapBounds[4] - mapBounds[2]
-  height <- mapBounds[3] - mapBounds[1]
-  longest_side <- max(width, height)
+  width <- map.bounds[4] - map.bounds[2]
+  height <- map.bounds[3] - map.bounds[1]
+  longest.side <- max(width, height)
   # just assuming it's along equator :D
-  longest_side_kilometers <- longest_side / 360 * 40075
+  longest.side.km <- longest.side / 360 * 40075
   # getting closest zoom for 640px
   # seems to be about 1km/100px at zoom 13, 2/100@12 , etc ...
   # 15 - 1.5
@@ -48,23 +48,23 @@ get_map_zoom <-function(mapBounds) {
   # 11 - 24 
   # 10 - 48
 
-  zoomSides = c(1.5,3,6,12,24,48)
-  zoomLevel = 15
+  zoom.sides <- c(1.5,3,6,12,24,48)
+  zoom.level <- 15
 
-  for (zoomSide in zoomSides){
-    if(longest_side_kilometers < zoomSide) {
+  for (zoom.side in zoom.sides){
+    if(longest.side.km < zoom.side) {
       break
     }
-    zoomLevel <- zoomLevel - 1
+    zoom.level <- zoom.level - 1
   }
 
-  return(zoomLevel)
+  return(zoom.level)
 }
 
-mapBounds <- get_map_bounds(routes)
+map.bounds <- GetMapBounds(routes)
 # print(mapBounds)
 # print(get_map_zoom(mapBounds))
-mapZoom = get_map_zoom(mapBounds)
+map.zoom <- GetMapZoom(map.bounds)
 
 # Map the routes
 # ids <- unique(index)
@@ -74,11 +74,11 @@ mapZoom = get_map_zoom(mapBounds)
 #   lines(currRoute$longitude, currRoute$latitude, col="#00000020")
 # }
 
-tapiolaMap <- qmap(location = mapBounds, zoom = mapZoom, color = 'bw')
+tapiola.map <- qmap(location = map.bounds, zoom = map.zoom, color = 'bw')
 
 
-mapToPrint <- tapiolaMap +
+map.to.print <- tapiola.map +
   geom_path(aes(x = longitude, y = latitude, group = factor(index)), 
                 colour="red", linetype = 1, size = 3, data = routes, alpha=0.3)
 
-print(mapToPrint)
+print(map.to.print)
